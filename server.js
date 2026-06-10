@@ -1,23 +1,31 @@
 import express from 'express';
-// import routers
-// import middleware
+import pool from './utils/db.js';
 
-const app = express();
-const port = process.env.SERVER_PORT || 3001;
+const app = express()
+const port = process.env.SERVER_PORT || 3000
 
 app.use(express.static('public')); // middleware per static files
-app.use(express.json()); // middleware interprete
+app.use(express.json());// middleware interprete
 
-// inserire il router 
+import productsRouter from './routers/products.js';
+app.use('/products', productsRouter);
 
-//inserire altri middleware es. errorHandler, notFound
+// test: stampo i prodotti nel terminal
+const [rows] = await pool.query('SELECT * FROM products');
+console.log(rows);
+
+
+app.get('/', (request, response) => {
+    response
+        .type('html')
+        .send('<h1>Express blog Routing</h1>')
+})
+
 
 app.listen(port, (error) => {
     if (error) {
-        console.error(error);
-        return;
+        console.error('Il server ha riscontrato un problema');
+    } else {
+        console.log(`Server in ascolto porta ${port}`);
     }
-    console.log(`server attivo alla porta ${port}`);
-    
-
 });
