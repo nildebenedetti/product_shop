@@ -23,8 +23,8 @@ CREATE TABLE `products`(
 );
 CREATE TABLE `category_product`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `category_id` BIGINT NOT NULL,
-    `product_id` BIGINT NOT NULL
+    `category_id` BIGINT UNSIGNED NOT NULL,
+    `product_id` BIGINT UNSIGNED NOT NULL
 );
 ALTER TABLE
     `category_product` ADD INDEX `category_product_category_id_product_id_index`(`category_id`, `product_id`);
@@ -36,7 +36,7 @@ CREATE TABLE `reviews`(
     `author_name` VARCHAR(255) NOT NULL,
     `submission_date` DATE NOT NULL,
     `find_it_useful` INT NULL,
-    `product_id` BIGINT NULL
+    `product_id` BIGINT UNSIGNED NULL
 );
 ALTER TABLE
     `category_product` ADD CONSTRAINT `category_product_category_id_foreign` FOREIGN KEY(`category_id`) REFERENCES `categories`(`id`)
