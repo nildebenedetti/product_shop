@@ -36,7 +36,7 @@ CREATE TABLE `reviews`(
     `author_name` VARCHAR(255) NOT NULL,
     `submission_date` DATE NOT NULL,
     `find_it_useful` INT NULL,
-    `product_id` BIGINT NULL
+    `product_id` BIGINT UNSIGNED NULL
 );
 ALTER TABLE
     `category_product` ADD CONSTRAINT `category_product_category_id_foreign` FOREIGN KEY(`category_id`) REFERENCES `categories`(`id`)
