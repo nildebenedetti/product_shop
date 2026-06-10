@@ -1,8 +1,9 @@
 // import connection from database
+import pool from '../utils/db.js';
 
 async function index(request, response) {
     try {
-        const [rows] = await connection.query('select * from `products`');
+        const [rows] = await pool.query('select * from `products`');
     
 
     response.json({

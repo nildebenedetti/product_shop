@@ -1,8 +1,6 @@
 import express from 'express';
 import pool from '../utils/db.js';
-import { index } from '../controllers/products';
-
-const router = express.Router();
+import { index } from '../controllers/products.js';
 
 // importazione controllers
 
