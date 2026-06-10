@@ -2,12 +2,13 @@
   "name": "product_shop",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node --env-file=.env server.js",
+    "watch": "node --watch --env-file=.env server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "noialtri",
   "license": "ISC",
   "packageManager": "pnpm@10.33.2",
   "type": "module",
