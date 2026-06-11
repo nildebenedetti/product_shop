@@ -4,7 +4,7 @@ import pool from '../utils/db.js';
 const index = async (request, response) => {
     try {
         // eseguo la query per ottenere tutte le categorie dal database
-        const [categories] = await connection.query('SELECT * FROM categories');
+        const [categories] = await pool.query('SELECT * FROM categories');
 
         // rispondo con i dati in formato JSON
         response.json({
