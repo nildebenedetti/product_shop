@@ -3,7 +3,7 @@ import pool from "../utils/db.js";
 async function index(request, response) {
     try {
         // Recupera dall'URL il parametro star_rating.
-        const { star_rating } = request.query;
+        const { start_rating } = request.query;
 
         // Query di partenza se non viene specificato alcun filtro.
         let sql = "SELECT * FROM reviews";
@@ -11,7 +11,7 @@ async function index(request, response) {
         const values = [];
 
         // Se nell'URL è presente il parametro star_rating converte il valore ricevuto da stringa a numero per poter verificare che sia un voto valido.
-        if (star_rating !== undefined) {
+        if (start_rating !== undefined) {
             const rating = Number(star_rating);
 
             // Il valore deve essere un numero intero compreso tra 1 e 5.
