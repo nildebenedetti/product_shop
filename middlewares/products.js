@@ -12,13 +12,13 @@ function validateProductBody(request, response, next) {
     if (realName === '') {
         response.status(400)
             .json({
-                error: 'il campo nome è obbligatorio'
+                error: 'il campo name è obbligatorio'
             });
         return;
     } else if (realName.length < 3 || realName.length > 150) {
         response.status(400)
             .json({
-                error: 'il nome del prodotto deve avere una lunghezza compresa tra i 3 e i 150 caratteri (spazi inclusi)'
+                error: 'il name del prodotto deve avere una lunghezza compresa tra i 3 e i 150 caratteri (spazi inclusi)'
             })
         return;
     }
@@ -109,7 +109,7 @@ function validateProductBody(request, response, next) {
     request.realAllergens = realAllergens;
 
     next()
-}
+};
 
 export {
     validateProductBody
