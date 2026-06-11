@@ -4,6 +4,7 @@ import cors from 'cors';
 import categoriesRouter from './routers/categoriesRouter.js';
 import reviewsRouter from "./routers/reviews.js";
 import productsRouter from './routers/products.js';
+import { validateId } from './middlewares/validateId.js';
 
 // import middleware
 import errorHandler from './middlewares/errorHandler.js';

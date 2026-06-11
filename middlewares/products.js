@@ -1,31 +1,13 @@
-function validateId(request, response, next) {
 
-    const { id } = request.params;
-    const realId = Number(id.trim());
-
-    if (isNaN(realId)) {
-        response.status(400)
-            .json({
-                error: 'Id non corretto: inserire un id valido!'
-            });
-        return;
-    } else if (isNaN(realId) || realId <= 0) {
-        response.status(400).json({ error: 'Id non valido', results: null });
-        return;
-    }
-
-    request.realId = realId;
-
-    next();
-
-}
 
 function validateProductBody(request, response, next) {
-    const { name, short_description: shortDescription, marketing_description: mktgDescription, price } = request.body;
+    const { name, short_description: shortDescription, marketing_description: mktgDescription, price, ingredients, allergens } = request.body;
     const realName = name.trim();
     const realShortDescription = shortDescription.trim();
     const realMktgDescription = mktgDescription.trim();
     const realPrice = Number(price.trim());
+    const realIngredients = ingredients.trim();
+    const realAllergens = allergens.trim();
 
     if (realName === '') {
         response.status(400)
@@ -90,21 +72,45 @@ function validateProductBody(request, response, next) {
         return;
     }
 
-    // ingredients 
+    if (realIngredients === '') {
+        response.status(400)
+            .json({
+                error: 'il campo ingredients è obbligatorio'
+            });
+        return;
+    } else if (realIngredients.length < 20 || realIngredients.length > 800) {
+        response.status(400)
+            .json({
+                error: 'il campo ingredients deve avere una lunghezza compresa tra i 20 e i 800 caratteri (spazi inclusi)'
+            });
+        return;
+    }
 
-    // allergens
+    if (realAllergens === '') {
+        response.status(400)
+            .json({
+                error: 'il campo allergens è obbligatorio'
+            });
+        return;
+    } else if (realAllergens.length < 3 || realAllergens.length > 300) {
+        response.status(400)
+            .json({
+                error: 'il campo ingredients deve avere una lunghezza compresa tra i 3 e i 300 caratteri (spazi inclusi), se non presenti, inserire N/A'
+            });
+        return;
+    }
     // image url ASPETTA ALDO CON IMG = SYNCH DB
 
-    // create e update time stamp non penso ci sia da fare validazione ??? discuss lcon Lorenzo
     request.realName = realName;
     request.realShortDescription = realShortDescription;
     request.realMktgDescription = realMktgDescription;
     request.realPrice = realPrice;
+    request.realIngredients = realIngredients;
+    request.realAllergens = realAllergens;
 
     next()
 }
 
 export {
-    validateId,
     validateProductBody
 };
