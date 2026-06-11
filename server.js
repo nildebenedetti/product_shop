@@ -9,7 +9,8 @@ app.use(express.static('public')); // middleware per static files
 app.use(express.json()); // middleware interprete
 
 // inserire il router 
-
+import reviewsRouter from "./routers/reviews.js";
+app.use("/reviews", reviewsRouter);
 //inserire altri middleware es. errorHandler, notFound
 
 app.listen(port, (error) => {

@@ -12,7 +12,7 @@ async function index(request, response) {
 
         // Se nell'URL è presente il parametro star_rating converte il valore ricevuto da stringa a numero per poter verificare che sia un voto valido.
         if (start_rating !== undefined) {
-            const rating = Number(star_rating);
+            const rating = Number(start_rating);
 
             // Il valore deve essere un numero intero compreso tra 1 e 5.
             if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
@@ -23,7 +23,7 @@ async function index(request, response) {
             }
 
             // Aggiunge alla query il filtro per il numero di stelle.
-            sql += " WHERE star_rating = ?";
+            sql += " WHERE start_rating = ?";
             // Il valore di rating viene inserito nell'array values.
             values.push(rating);
         }
