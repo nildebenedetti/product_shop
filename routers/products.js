@@ -1,7 +1,7 @@
 import express from 'express';
 import pool from '../utils/db.js';
 import { index } from '../controllers/products.js';
-
+import { validateId, validateProductBody } from '../middlewares/products.js';
 // importazione controllers
 
 // importazione middlewares
@@ -11,7 +11,8 @@ import { index } from '../controllers/products.js';
 const router = express.Router();
 
 // rotta index
-router.get('/', index);
+router.get('/', [ index]);
 
 // rotta show
+
 export default router;
