@@ -6,6 +6,7 @@ function validateProducts(request, response, next) {
     const realName = name.trim(); 
     const realShortDescription = shortDescription.trim();
     const realMktgDescription = mktgDescription.trim();
+    const realPrice = Number(price.trim());
 
     if (isNan(realId)) {
         response.status(400)
@@ -61,7 +62,27 @@ function validateProducts(request, response, next) {
     }
 
     // price (decimal, parsefloat to 2, compreso tra 3 e 15)
+    if (isNan(realPrice)) {
+        response.status(400)
+            .json({
+                error: 'Il campo price deve essere un numero!'
+            });
+            return;
+    } else if (realPrice <= 0) {
+        response.status(400)
+            .json({
+                error: 'ti piacerebbe pagare i clienti per mangiare gelati? A me no... inserisci un numero positivo'
+            });
+            return;
+    } else if (realPrice < 3 || realPrice> 15 ) {
+        response.status(400)
+            .json({
+                error:'Il prezzo inserito è contro ogni logica: inserire un valora tra 3 e 15'
+            });
+            return;
+    }
 
+    
     
     // ingredients 
     // allergens
