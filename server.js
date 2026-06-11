@@ -1,6 +1,14 @@
 import express from 'express';
 import pool from './utils/db.js';
 import cors from 'cors';
+import categoriesRouter from './routers/categoriesRouter.js';
+import reviewsRouter from "./routers/reviews.js";
+import productsRouter from './routers/products.js';
+
+// import middleware
+import errorHandler from './middlewares/errorHandler.js';
+import notFound from './middlewares/notFound.js';
+
 
 const app = express()
 const port = process.env.SERVER_PORT || 3000
@@ -9,7 +17,10 @@ app.use(express.static('public')); // middleware per static files
 app.use(cors());
 app.use(express.json());// middleware interprete
 
-import productsRouter from './routers/products.js';
+app.use("/reviews", reviewsRouter);
+
+app.use("/categories", categoriesRouter);
+
 app.use('/products', productsRouter);
 
 // test: stampo i prodotti nel terminal
@@ -23,6 +34,7 @@ app.get('/', (request, response) => {
         .send('<h1>Express blog Routing</h1>')
 })
 
+app.use(errorHandler);
 
 app.listen(port, (error) => {
     if (error) {

@@ -1,6 +1,7 @@
 import express from 'express';
 import pool from '../utils/db.js';
 import { index, show } from '../controllers/products.js';
+
 import { validateId, validateProductBody } from '../middlewares/products.js';
 // importazione controllers
 
@@ -14,6 +15,9 @@ const router = express.Router();
 router.get('/', [ index]);
 
 // rotta show
+
 router.get('/:id', [validateId, show]);
+
+
 
 export default router;

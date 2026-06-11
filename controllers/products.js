@@ -19,7 +19,6 @@ async function index(request, response) {
     }
 }
 
-//SHOW
 async function show(request, response) {
     const realId = request.realId
 
