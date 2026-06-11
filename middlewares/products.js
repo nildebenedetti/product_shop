@@ -1,11 +1,13 @@
 
 
 function validateProductBody(request, response, next) {
-    const { name, short_description: shortDescription, marketing_description: mktgDescription, price } = request.body;
+    const { name, short_description: shortDescription, marketing_description: mktgDescription, price, ingredients, allergens } = request.body;
     const realName = name.trim();
     const realShortDescription = shortDescription.trim();
     const realMktgDescription = mktgDescription.trim();
     const realPrice = Number(price.trim());
+    const realIngredients = ingredients.trim();
+    const realAllergens = allergens.trim();
 
     if (realName === '') {
         response.status(400)
@@ -70,7 +72,19 @@ function validateProductBody(request, response, next) {
         return;
     }
 
-    // ingredients 
+    if (realIngredients === '') {
+        response.status(400)
+            .json({
+                error: 'il campo ingredients è obbligatorio'
+            });
+        return;
+    } else if (realIngredients.length < 20 || realIngredients.length > 800) {
+        response.status(400)
+            .json({
+                error: 'il campo ingredients deve avere una lunghezza compresa tra i 20 e i 800 caratteri (spazi inclusi)'
+            });
+        return;
+    }
 
     // allergens
     // image url ASPETTA ALDO CON IMG = SYNCH DB
@@ -80,6 +94,8 @@ function validateProductBody(request, response, next) {
     request.realShortDescription = realShortDescription;
     request.realMktgDescription = realMktgDescription;
     request.realPrice = realPrice;
+    request.realIngredients = realIngredients;
+
 
     next()
 }
