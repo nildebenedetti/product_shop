@@ -1,10 +1,19 @@
 import express from 'express';
-import { index } from '../controllers/categoriesController.js';
+import { index, show } from '../controllers/categoriesController.js';
+import { validateCategoryBody } from '../middlewares/categoriesMiddlewares.js';
+import { validateId } from '../middlewares/validateId.js';
+
 
 // creo il router per le categorie
-const categoriesRouter = express.Router();
 
-// rotta GET per ottenere tutte le categorie
-categoriesRouter.get('/categories', index);
+const router = express.Router();
 
-export default categoriesRouter;
+// rotta index
+router.get('/', [ index]);
+
+// rotta show
+
+router.get('/:id', [validateId, show]);
+
+
+export default router;
