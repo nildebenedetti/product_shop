@@ -53,7 +53,7 @@ function validateCategoryBody(request, response, next) {
                 error: 'il campo category_type è obbligatorio'
             });
         return;
-    } else if (realCategoryType == ! 'theme' || realCategoryType == ! 'product_type') {
+    } else if (realCategoryType !== 'theme' || realCategoryType !== 'product_type') {
         // entra nel controllo
         // il controllo lancerá lérrore se
         // é diverso da theme
