@@ -2,8 +2,10 @@
 import pool from '../utils/db.js';
 
 async function index(request, response) {
+    const querySelectAll = 'select * from `products`';
+
     try {
-        const [rows] = await pool.query('select * from `products`');
+        const [rows] = await pool.query(querySelectAll);
 
 
         response.json({
@@ -20,27 +22,30 @@ async function index(request, response) {
 }
 
 async function show(request, response) {
-    const realId = request.realId
+    const realId = request.realId;
+    const querySelectById = 'SELECT * FROM `products` WHERE id = ?';
 
+    // recupero prodotto grezzo
+    const rawProduct = rows[0];
+    const relativePath = rawProduct.image_url?.replace('http://localhost:3000', '') || ''; // cancello questo placeholder del dominio
+    // creo oggetto con prodotto normalizzato
+    const normalizedProduct = {
+        ...rawProduct,
+        price: parseFloat(rawProduct.price),
+        image_url: process.env.APP_URL ? `${process.env.APP_URL}${relativePath}` : relativePath
+    }
     try {
         const [rows] = await pool.query(
-            'SELECT * FROM `products` WHERE id = ?', [realId]
+            querySelectById, [realId]
         );
-
-        if (rows.length === 0) {
-            response.status(404)
-                .json({ error: `Prodotto ${realId} non trovato`, results: null });
-            return;
-        }
-
-        response.status(200).json({ error: null, results: rows[0] });
+        response.status(200).json({ error: null, results: normalizedProduct });
     } catch (error) {
         console.error("errore durante il recupero del prodotto", error.message);
         response.status(500)
             .json({
-            error: 'errore interno del server nel recupero del prodotto',
-            results: null
-        });
+                error: 'errore interno del server nel recupero del prodotto',
+                results: null
+            });
     }
 }
 
