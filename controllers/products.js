@@ -7,7 +7,7 @@ async function index(request, response) {
 
     try {
         const [rows] = await pool.query(querySelectAll);
-
+        const normalizedProducts = rows.map(normalizeProduct);
 
         response.json({
             error: null,
@@ -28,9 +28,8 @@ async function show(request, response) {
 
     // recupero prodotto grezzo
     const rawProduct = rows[0];
-    const relativePath = rawProduct.image_url?.replace('http://localhost:3000', '') || ''; // cancello questo placeholder del dominio
     // creo oggetto con prodotto normalizzato
-    const normalizedProduct = rows.map(normalizeProduct);
+    const normalizedProduct = normalizeProduct(rawProduct);
     try {
         const [rows] = await pool.query(
             querySelectById, [realId]
