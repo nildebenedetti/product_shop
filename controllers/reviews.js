@@ -1,4 +1,5 @@
 import pool from "../utils/db.js";
+import { generateCurrentDate } from "../utils/functions.js";
 
 async function index(request, response) {
     try {
@@ -90,9 +91,7 @@ async function show(request, response) {
     }
 }
 
-const generateCurrentDate = () => {
-    return new Date().toISOString().split("T")[0];
-}
+
 
 async function create(request, response) {
     const {

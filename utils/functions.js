@@ -10,4 +10,11 @@ function normalizeProduct(product) {
     };
 }
 
-export { normalizeProduct };
+const generateCurrentDate = () => {
+    return new Date().toISOString().split("T")[0];
+}
+
+export { 
+    normalizeProduct,
+    generateCurrentDate 
+};
