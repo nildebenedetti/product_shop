@@ -54,8 +54,10 @@ const index = async (request, response) => {
                     imageUrl,
                     categories,
                     productShortDescription,
-                    productMktgDescription, ingredients,
+                    productMktgDescription, 
+                    ingredients,
                     allergens,
+                    price,
                     availability
                 }
 
