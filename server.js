@@ -25,8 +25,8 @@ app.use("/categories", categoriesRouter);
 app.use('/products', productsRouter);
 
 // test: stampo i prodotti nel terminal
-const [rows] = await pool.query('SELECT * FROM products');
-console.log(rows);
+/* const [rows] = await pool.query('SELECT * FROM products');
+console.log(rows); */
 
 
 app.get('/', (request, response) => {
