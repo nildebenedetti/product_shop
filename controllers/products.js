@@ -1,14 +1,17 @@
 // import connection from database
 import pool from '../utils/db.js';
+import { normalizeProduct } from '../utils/functions.js';
 
 async function index(request, response) {
-    try {
-        const [rows] = await pool.query('select * from `products`');
+    const querySelectAll = 'select * from `products`';
 
+    try {
+        const [rows] = await pool.query(querySelectAll);
+        const normalizedProducts = rows.map(normalizeProduct);
 
         response.json({
             error: null,
-            results: rows
+            results: normalizedProducts
         });
     } catch (error) {
         console.error("errore durante l'import del catalogo prodotti", error.message)
@@ -20,27 +23,27 @@ async function index(request, response) {
 }
 
 async function show(request, response) {
-    const realId = request.realId
-
+    const realId = request.realId;
+    const querySelectById = 'SELECT * FROM `products` WHERE id = ?';
+    
     try {
         const [rows] = await pool.query(
-            'SELECT * FROM `products` WHERE id = ?', [realId]
+            querySelectById, [realId]
         );
-
-        if (rows.length === 0) {
-            response.status(404)
-                .json({ error: `Prodotto ${realId} non trovato`, results: null });
-            return;
-        }
-
-        response.status(200).json({ error: null, results: rows[0] });
+        // recupero prodotto grezzo
+        const rawProduct = rows[0];
+        // creo oggetto con prodotto normalizzato
+        const normalizedProduct = normalizeProduct(rawProduct);
+        response.status(200)
+            .json({ error: null, results: normalizedProduct });
     } catch (error) {
         console.error("errore durante il recupero del prodotto", error.message);
         response.status(500)
             .json({
-            error: 'errore interno del server nel recupero del prodotto',
-            results: null
-        });
+                error: 'errore interno del server nel recupero del prodotto',
+                results: null
+            });
+        return;
     }
 }
 
