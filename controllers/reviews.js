@@ -134,8 +134,6 @@ async function show(request, response) {
     }
 }
 
-
-
 async function create(request, response) {
     const {
         realTitle,
