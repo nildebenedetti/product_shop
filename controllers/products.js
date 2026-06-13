@@ -1,6 +1,7 @@
 // import connection from database
 import pool from '../utils/db.js';
 import { normalizeProduct } from '../utils/functions.js';
+import { querySelectProductBySearchString, querySelectStarRatingById } from '../utils/queries.js';
 
 async function index(request, response) {
     const querySelectAll = 'select * from `products`';
@@ -47,6 +48,31 @@ async function show(request, response) {
     }
 }
 
+
+async function showProductAvgStarRating(request, response){
+    const realId = request.realId;
+
+    try {
+        const [rows] = await pool.execute(
+            querySelectStarRatingById, [realId]
+        );
+
+        response.status(200)
+        .json({
+            error: null,
+            results: rows
+        });
+    } catch (error) {
+        response.status(500)
+            .json({
+                error: `errore interno del server nella fetch del dato Average Rating per prodotto con id ${realId}`,
+                results:null
+            });
+    }
+
+
+};
+
 async function featured(request, response) {
     const querySelectFeaturedProducts = `select p.*
     from products p 
@@ -70,4 +96,4 @@ async function featured(request, response) {
     }
 }
 
-export { index, show, featured };
+export { index, show, showProductAvgStarRating featured };
