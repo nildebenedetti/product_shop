@@ -1,6 +1,6 @@
 import express from 'express';
 import pool from '../utils/db.js';
-import { index, show, featured } from '../controllers/products.js';
+import { index, show, featured, showProductAvgStarRating } from '../controllers/products.js';
 import { validateProductBody } from '../middlewares/products.js';
 import { validateId } from '../middlewares/validateId.js';
 // importazione controllers
@@ -11,15 +11,18 @@ import { validateId } from '../middlewares/validateId.js';
 
 const router = express.Router();
 
-// rotta index
+// rotta index con parametro ricerca
 router.get('/', [ index]);
 
 // rottta product featured
-router.get('/featured', featured)
+router.get('/featured', [validateId, featured]);
 
-// rotta show
+// rotta show 
 
 router.get('/:id', [validateId, show]);
+
+// rotta custom per fetch star rating average
+router.get('/avgRating/:id', [validateId, showProductAvgStarRating]);
 
 
 
