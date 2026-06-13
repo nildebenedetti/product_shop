@@ -47,7 +47,7 @@ async function index(request, response) {
     }
 }
 
-async function show(request, response) {
+async function showFeaturedReviews(request, response) {
     const  realId = request.realId;
 
     const sqlShow = `select r.*, p.name as product_name
@@ -55,6 +55,49 @@ async function show(request, response) {
     where p.id = ?
     ORDER BY r.submission_date DESC
     LIMIT 3;`;
+
+    try {
+        // Cerca nel database la recensione con l'id richiesto, il valore realId viene associato al segnaposto ?.
+        const [rows] = await pool.execute(
+            sqlShow, [realId]
+        );
+        // N - ho tolto la validazione perchè se un prodotto ha 0 reviews,
+        // non va lanciato errore ma mostrato solo un array vuoto
+        if (rows.length === 0) {
+            response.status(200).json({
+                error: null,
+                results: []
+            });
+            return;
+        }
+
+        // Restituisce arrai di reviews.
+        response.status(200)
+        .json({
+            error: null,
+            results: rows
+        });
+    } catch (error) {
+        console.error(
+            "errore durante il recupero della recensione",
+            error.message
+        );
+        // Gestisce eventuali problemi del server o del database.
+        response.status(500)
+            .json({
+            error: 'errore interno del server nel recupero della recensione',
+            results: null
+        });
+    }
+}
+
+async function show(request, response) {
+    const  realId = request.realId;
+
+    const sqlShow = `select r.*, p.name as product_name, p.id as product_id
+    from reviews r join products p on p.id = r.product_id
+    where p.id = 2
+    ORDER BY r.submission_date DESC`;
 
     try {
         // Cerca nel database la recensione con l'id richiesto, il valore realId viene associato al segnaposto ?.
@@ -151,4 +194,4 @@ async function create(request, response) {
 }
 
 
-export { index, show, create };
+export { index, show, showFeaturedReviews, create };
