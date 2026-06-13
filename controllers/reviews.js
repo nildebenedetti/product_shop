@@ -143,7 +143,7 @@ async function create(request, response) {
         rating,
         realAuthorName,
         realProductId
-    } = request;
+    } = request.body;
 
     const submissionDate = generateCurrentDate();
 
@@ -170,7 +170,7 @@ async function create(request, response) {
         response.status(201).json({
             error: null,
             results: {
-                id: result.insertId,
+                id: result.insertId, 
                 title: realTitle,
                 body: realBody,
                 start_rating: rating,
@@ -195,11 +195,11 @@ async function create(request, response) {
 
 
 async function destroy(request, response) {
-    const { realId } = request.params;
+    const realId = request.realId;
     // can
     const queryDestroyProduct = `delete r.*
     from reviews r
-    where r.id =`;
+    where r.id = ? `;
 
     try {
         const [rows] = await pool.execute(
