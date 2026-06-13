@@ -1,7 +1,7 @@
 // import connection from database
 import pool from '../utils/db.js';
 import { normalizeProduct } from '../utils/functions.js';
-import { querySelectProductBySearchString, querySelectStarRatingById } from '../utils/queries.js';
+import { querySelectProductBySearchString, querySelectProductStarRatingById } from '../utils/queries.js';
 
 async function index(request, response) {
     const querySelectAll = 'select * from `products`';
@@ -96,4 +96,4 @@ async function featured(request, response) {
     }
 }
 
-export { index, show, showProductAvgStarRating featured };
+export { index, show, showProductAvgStarRating, featured };

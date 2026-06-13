@@ -28,5 +28,5 @@ const querySelectProductStarRatingById = `
 
     export {
     querySelectProductBySearchString,
-    querySelectStarRatingById
+    querySelectProductStarRatingById
 };
