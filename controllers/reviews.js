@@ -96,7 +96,7 @@ async function show(request, response) {
     try {
         // Cerca nel database la recensione con l'id richiesto, il valore realId viene associato al segnaposto ?.
         const [rows] = await pool.execute(
-            queryShowAllReviews, [realId]
+            queryShowAllProductReviews, [realId]
         );
         // N - ho tolto la validazione perchè se un prodotto ha 0 reviews,
         // non va lanciato errore ma mostrato solo un array vuoto

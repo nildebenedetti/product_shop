@@ -12,43 +12,44 @@ async function index(request, response) {
     const userInput = request.query.search
         ? request.query.search.toLowerCase().trim()
         : undefined;
-    const searchParamFormatted = `%${userInput}%`;
 
-    if (userInput) {
-        try {
+    try {
+        if (userInput) {
+            const searchParamFormatted = `%${userInput}%`;
+
             const [rows] = await pool.execute(
-                querySelectProductBySearchString, [searchParamFormatted, searchParamFormatted, searchParamFormatted, searchParamFormatted]
+                querySelectProductBySearchString,
+                [
+                    searchParamFormatted,
+                    searchParamFormatted,
+                    searchParamFormatted,
+                    searchParamFormatted
+                ]
             );
 
-            response.status(200)
-                .json({
-                    error: null,
-                    results: rows
-                });
-
-        } catch (error) {
-            response.status(500)
-                .json({
-                    error: `errore interno del server nella ricerca dei prodotti`,
-                    results: null
-                });
-        }
-
-        try {
-            const [rows] = await pool.query(querySelectAll);
-            const normalizedProducts = rows.map(normalizeProduct);
-
-            response.json({
+            return response.status(200).json({
                 error: null,
-                results: normalizedProducts
+                results: rows
             });
-        } catch (error) {
-            console.error("errore durante l'import del catalogo prodotti", error.message)
-            response.status(500).json({
-                error: 'errore interno del server nel recupero del catalogo prodotti',
-                results: null
-            })
         }
+
+        const [rows] = await pool.query(querySelectAll);
+        const normalizedProducts = rows.map(normalizeProduct);
+
+        response.status(200).json({
+            error: null,
+            results: normalizedProducts
+        });
+    } catch (error) {
+        console.error(
+            "Errore durante il recupero dei prodotti",
+            error.message
+        );
+
+        response.status(500).json({
+            error: "Errore interno del server nel recupero dei prodotti",
+            results: null
+        });
     }
 }
 
