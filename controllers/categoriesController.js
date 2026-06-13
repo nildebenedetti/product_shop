@@ -1,15 +1,11 @@
 import pool from '../utils/db.js';
 import { normalizeProduct } from '../utils/functions.js';
+import {     
+    querySelectAllCategoriesandProducts,
+    querySelectProductByCateogryId} from "../utils/queries.js"
 
 // funzione che gestisce la richiesta GET per ottenere tutte le categorie
 const index = async (request, response) => {
-
-    const querySelectAllCategoriesandProducts = `    SELECT 
-    c.id as category_id, c.name AS category_name, c.category_type as category_type, c.short_description AS category_short_description, c.marketing_description as category_marketing_description, p.id AS product_id, p.name as product_name, p.short_description as product_short_description, p.marketing_description as product_marketing_description, p.ingredients, p.allergens, p.availability, p.price , p.image_url as imageUrl
-    FROM categories c
-    LEFT JOIN category_product cp ON c.id = cp.category_id
-    LEFT JOIN products p ON p.id = cp.product_id`;
-
 
     try {
         // eseguo la query per ottenere tutte le categorie dal database
@@ -96,14 +92,6 @@ const index = async (request, response) => {
 async function show(request, response) {
 
     const categoryId = request.realId; // passato gia ddai controlli
-
-    const querySelectProductByCateogryId = `
-    SELECT p.*
-    FROM products p
-    JOIN category_product pc 
-    ON p.id = pc.product_id
-    JOIN categories c ON pc.category_id = c.id
-    WHERE c.id = ? ;`;
 
 
 

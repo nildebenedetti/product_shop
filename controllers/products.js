@@ -1,15 +1,18 @@
 // import connection from database
 import pool from '../utils/db.js';
 import { normalizeProduct } from '../utils/functions.js';
-import { querySelectProductBySearchString, querySelectProductStarRatingById } from '../utils/queries.js';
+import { 
+    querySelectAll,
+    querySelectById,
+    querySelectFeaturedProducts,
+    querySelectProductBySearchString,
+    querySelectProductStarRatingById } from '../utils/queries.js';
 
 async function index(request, response) {
     const userInput = request.query.search
         ? request.query.search.toLowerCase().trim()
         : undefined;
     const searchParamFormatted = `%${userInput}%`;
-
-    const querySelectAll = 'select * from `products`';
 
     if (userInput) {
         try {
@@ -52,9 +55,6 @@ async function index(request, response) {
 async function show(request, response) {
     const realId = request.realId;
 
-    const querySelectById = 'SELECT * FROM `products` WHERE id = ?';
-
-
     try {
         const [rows] = await pool.query(
             querySelectById, [realId]
@@ -75,8 +75,6 @@ async function show(request, response) {
         return;
     }
 }
-
-
 
 async function showProductAvgStarRating(request, response) {
     const realId = request.realId;
@@ -127,10 +125,6 @@ async function showProductbySearchString(request, response) {
 }
 
 async function featured(request, response) {
-    const querySelectFeaturedProducts = `select p.*
-    from products p 
-    order by updated_at desc
-    limit 5;`;
 
     try {
         const [rows] = await pool.query(querySelectFeaturedProducts);

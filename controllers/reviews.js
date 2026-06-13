@@ -1,26 +1,31 @@
 import pool from "../utils/db.js";
 import { generateCurrentDate } from "../utils/functions.js";
+import {
+    querySelectAllReviews,
+    querySelectFeaturedReviews,
+    queryShowAllProductReviews,
+    queryCreateReview,
+    queryDestroyReview
+} from "../utils/queries.js";
 
 async function index(request, response) {
     try {
-        // Query di partenza se non viene specificato alcun filtro.
-        let sql = "SELECT * FROM reviews";
         // Conterrà i valori da inserire al posto di ? nella query.
         const values = [];
 
         // Se il middleware ha validato start_rating, aggiunge il filtro alla query.
         if (request.rating !== undefined) {
-            sql += " WHERE start_rating = ?";
+            querySelectAllReviews += " WHERE start_rating = ?";
             values.push(request.rating);
         }
 
         console.log("Parametro ricevuto:", request.rating);
-        console.log("Query eseguita:", sql, values);
+        console.log("Query eseguita:", querySelectAllReviews, values);
 
         // Esegue la query.
         // Senza filtro la query restituisce tutte le recensioni.
         // Con il filtro start_rating restituisce solo quelle con il voto richiesto.
-        const [rows] = await pool.execute(sql, values);
+        const [rows] = await pool.execute(querySelectAllReviews, values);
 
         // Anche se non sono presenti recensioni non viene restituito un errore perché un risultato vuoto è possibile.
         if (rows.length === 0) {
@@ -50,16 +55,10 @@ async function index(request, response) {
 async function showFeaturedReviews(request, response) {
     const realId = request.realId;
 
-    const sqlShow = `select r.*, p.name as product_name
-    from reviews r join products p on p.id = r.product_id
-    where p.id = ?
-    ORDER BY r.submission_date DESC
-    LIMIT 3;`;
-
     try {
         // Cerca nel database la recensione con l'id richiesto, il valore realId viene associato al segnaposto ?.
         const [rows] = await pool.execute(
-            sqlShow, [realId]
+            querySelectFeaturedReviews, [realId]
         );
         // N - ho tolto la validazione perchè se un prodotto ha 0 reviews,
         // non va lanciato errore ma mostrato solo un array vuoto
@@ -94,15 +93,10 @@ async function showFeaturedReviews(request, response) {
 async function show(request, response) {
     const realId = request.realId;
 
-    const sqlShow = `select r.*, p.name as product_name, p.id as product_id
-    from reviews r join products p on p.id = r.product_id
-    where p.id = 2
-    ORDER BY r.submission_date DESC`;
-
     try {
         // Cerca nel database la recensione con l'id richiesto, il valore realId viene associato al segnaposto ?.
         const [rows] = await pool.execute(
-            sqlShow, [realId]
+            queryShowAllReviews, [realId]
         );
         // N - ho tolto la validazione perchè se un prodotto ha 0 reviews,
         // non va lanciato errore ma mostrato solo un array vuoto
@@ -145,14 +139,10 @@ async function create(request, response) {
 
     const submissionDate = generateCurrentDate();
 
-    const sqlCreate = `INSERT INTO reviews
-            (title, body, start_rating, author_name, submission_date, find_it_useful, product_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?)`;
-
     try {
         // Inserisce la nuova recensione nel database i valori vengono associati ai segnaposto ? nello stesso ordine.
         const [result] = await pool.execute(
-            sqlCreate,
+            queryCreateReview,
             [
                 realTitle,
                 realBody,
@@ -194,14 +184,10 @@ async function create(request, response) {
 
 async function destroy(request, response) {
     const realId = request.realId;
-    // can
-    const queryDestroyProduct = `delete r.*
-    from reviews r
-    where r.id = ? `;
-
+    
     try {
         const [rows] = await pool.execute(
-            queryDestroyProduct, [realId]
+            queryDestroyReview, [realId]
         );
         
         if ( rows.affectedRows === 0 ) {
