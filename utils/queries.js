@@ -1,6 +1,21 @@
 'use strict';
 
-/* ====== REVIEWS ===== */
+import { index } from "../controllers/products";
+
+/* ====== PRODUCTS ===== */
+
+// INDEX
+
+const querySelectAll = 'select * from `products`';
+
+// SHOW
+const querySelectById = 'SELECT * FROM `products` WHERE id = ?';
+
+// FEATURED - i 5 prodotti più recenti in base a data di pubblicazione
+const querySelectFeaturedProducts = `select p.*
+    from products p 
+    order by updated_at desc
+    limit 5;`;
 
 /* restituisce le row dei prodotti che contengono la stringa ricevuta dalla richiesta la ricerca in p.name/p.description/c.name/c.description  */
 
@@ -26,7 +41,15 @@ const querySelectProductStarRatingById = `
     where p.id = ?;`;
 
 
-    export {
+
+
+/* ====== REVIEWS ===== */
+/* ====== CATEGORIES ===== */
+
+export {
+    querySelectAll,
+    querySelectById,
+    querySelectFeaturedProducts,
     querySelectProductBySearchString,
     querySelectProductStarRatingById
 };

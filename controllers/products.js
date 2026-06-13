@@ -9,8 +9,6 @@ async function index(request, response) {
         : undefined;
     const searchParamFormatted = `%${userInput}%`;
 
-    const querySelectAll = 'select * from `products`';
-
     if (userInput) {
         try {
             const [rows] = await pool.execute(
@@ -52,9 +50,6 @@ async function index(request, response) {
 async function show(request, response) {
     const realId = request.realId;
 
-    const querySelectById = 'SELECT * FROM `products` WHERE id = ?';
-
-
     try {
         const [rows] = await pool.query(
             querySelectById, [realId]
@@ -75,8 +70,6 @@ async function show(request, response) {
         return;
     }
 }
-
-
 
 async function showProductAvgStarRating(request, response) {
     const realId = request.realId;
@@ -127,10 +120,6 @@ async function showProductbySearchString(request, response) {
 }
 
 async function featured(request, response) {
-    const querySelectFeaturedProducts = `select p.*
-    from products p 
-    order by updated_at desc
-    limit 5;`;
 
     try {
         const [rows] = await pool.query(querySelectFeaturedProducts);
